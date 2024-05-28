@@ -1,12 +1,10 @@
-#Program written by Dr. A Gillen (Dow-Davies Lab, University of Glasgow) on 23/05/2023. Feel free to use/modify as necessary
-
 import csv
 import math
 import os
 import sys
 
 from collections import defaultdict
-from GESS_h5handling_test import H5_GESS
+from utils.GESS_HandleH5s.py import H5_GESS
 import pandas as pd
 
 #A class for handling GESS calculations
