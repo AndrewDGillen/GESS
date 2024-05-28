@@ -4,7 +4,7 @@ import os
 import sys
 
 from collections import defaultdict
-from utils.GESS_HandleH5s.py import H5_GESS
+from Utils.HandleH5s import H5_GESS
 import pandas as pd
 
 #A class for handling GESS calculations
@@ -30,19 +30,19 @@ class Comparison():
         self.targetgene = target_gene
 
         #If the user fails to supply them, the gene name format is used to infer species
-        #In cases where this is not baked into FlyGene, the program will error out.
-
-        if query_species == '' and self.h5mode == None:
+        #This is only absolutely necessary if attempting to interpret an annotation file for bulk analysis.
+        if query_species == '' and self.h5mode in [None, 'Bulk']:
             self.queryspecies= self.get_species(self.querygene)
         else:
             self.queryspecies = query_species
         
-        if target_species == '' and self.h5mode == None:
+        if target_species == '' and self.h5mode in [None, 'Bulk']:
             self.targetspecies = self.get_species(self.targetgene)
         else:
             self.targetspecies = target_species
 
         #Handles datafiles differently for h5ad files vs flat expression matrices
+        #H5 Handling uses the Utils/HandleH5s program
         if '.h5' in self.querydata:
             query_alllevels = H5_GESS(anno_levels, self.querydata, self.querygene, self.h5mode, umi_thresh)
 
@@ -85,25 +85,12 @@ class Comparison():
 
         for i in anno_levels :
             self.all_comparisons.append((query_alllevels[i], target_alllevels[i]))#
-
-
-    #FOR TESTING - 
-    # #Allows manual setting of data vectors based on data from files
-    # def update_datavectors(self, querymatrix, targetmatrix): 
-    #     self.querytissues, self.queryfuncs, self.querytypes = querymatrix
-    #     self.targettissues, self.targetfuncs, self.targettypes = targetmatrix
-
-    #     self.tissues_compare = (self.querytissues, self.targettissues)
-    #     self.func_compare = (self.queryfuncs, self.targetfuncs)
-    #     self.type_compare = (self.querytypes, self.targettypes)
-
-    #     self.all_comparisons = [(self.tissues_compare, False), (self.func_compare, True), (self.type_compare,True)]
     
     #Uses gene name to infer species in known cases. 
-    #At present, we only have D. mel and A. aeg baked in - these are the species currently worked up for FlyGene
+    #At present, we only have D. mel and A. aeg baked in
+    #Tbd - automatically detect species based on gene name formatting?
     def get_species(self, genename):
         geneformats = {
-            #'FBGN':('Drosophila melanogaster', 'Enrichment_FPKM_Gene_Female.csv'),
             'FBGN':('Drosophila melanogaster'),
             'AAEL':('Aedes aegypti')
             }
@@ -113,24 +100,21 @@ class Comparison():
 
         except:
             print('\n~~~ERROR~~~')
-            print('The gene format cannot be assigned to a FlyGene species')
+            print('The gene format cannot be assigned to a native GESS species')
             print('Please manually provide species names if not using a FlyGene species')
 
         return species_name
-    
-    #********
-    #TBD - Update definitiion
-    #********
 
     #FlyGene Score is defined as:
     #       1/ 1 + (|Position of category in Query gene data - Position of category in Target gene data|)
-    #       PLUS 1/ 1 + ABSOLUTE DIFFERENCE(log2(Enrichment of category in Query gene data) - log2(Enrichment of category in Target gene data))
-    #       FOR EACH CATEGORY (That is, EVERY tissue, EVERY Functional annotation, EVERY tissue type) present in both query and target category sets
-    #       FOR EACH ANNOTATION LEVEL (That is, all of Tissue, Function and Type)
+    #       PLUS 1/ 1 + ABSOLUTE DIFFERENCE(log2(Quantification of category in Query gene data) - log2(Quantification of category in Target gene data))
+    #       FOR EACH CATEGORY (EG, EVERY tissue, EVERY Functional annotation, EVERY tissue type) present in both query and target category sets
+    #       FOR EACH ANNOTATION LEVEL (EG, all of Tissue, Function and Type)
     
-    #Note that we currently log2 transform enrichment values for this calculation. This achieves two things:
-        #Corrects the calculation to represent the DISTANCE of both enrichment and depletion from 1 (ie no change from whole insect)
+    #Note that we currently log2 transform quantification values for this calculation. This achieves two things:
+        #Corrects the calculation to represent the DISTANCE of both enrichment and depletion from 1 (representing no change from whole insect)
         #Fixes the scale to fully represent depletion instead of it being bounded between 0-1
+    #Log2 transformation is not applied to PREVALENCE scoring
 
     #This produces a score which is proportional to the similarity in gene expression patterns.
     #Fundamentally, the upper limits of this score are limited by the number of shared categories, and therefore by the depth of each dataset.
@@ -138,7 +122,7 @@ class Comparison():
     #       (2 * shared categories at a given annotation level)
     #       SUMMED ACROSS ANNOTATION LEVELS
 
-    #FlyGene Score is currently presented as a percentage of this maximum BUT this may overrepresent similarity in expression pattern between shallower data sets.
+    #GESS is currently presented as a percentage of this maximum BUT this may overrepresent similarity in expression pattern between shallower data sets.
 
     #A special version of GESS is provided for testing, which A - gives very verbose printouts to terminal and B - Prints test results to file
     def test_gess(self, weighting, loglevel, posdistance):
@@ -223,18 +207,13 @@ class Comparison():
             
             #For annotation levels where multiple tissues may fall under the same category (IE Function or Type level comparisons), we gather AVERAGE ENRICHMENT for each category
             comparison_pair = (condense_cats(comparison_pair[0]), condense_cats(comparison_pair[1]))
-            # print(annotation_level)
-            # print()
-            # print(comparison_pair) 
-            # print()
-            # print(consistent_cats)
+
             #We remove all non-matched categories from both query and target lists
             #Leaving these categories in the list would affect positioning and thus invalidate comparisons.
             scrubbed_queries, scrubbed_targets = scrub_lists(comparison_pair, consistent_cats)
             
             if verbose == False:
                 blockPrint()
-                #pass
             else:
                 print('\n\n')
                 print('----Comparing categories:', consistent_cats)
@@ -264,8 +243,8 @@ def file_to_vectors(testdata, annotations_by_tissue, geneofinterest):
         elif '.tsv' in testdata:
             INdata=csv.reader(testfile, delimiter='\t')
         else:
-            print('---ERROR---')
-            print('Data filetype not supported')
+            print('---GESS ERROR---')
+            print('Annotation data (-a) filetype not supported')
             exit()
 
         linecount = 0
@@ -354,6 +333,8 @@ def scrub_lists(listpair, cats_in_use):
     #These should not require re-sorting as the original list order is preserved, just minus all non-matching tissues
     return fixed_querylist, fixed_targetlist
 
+#Recursively compares quantification between a given position and the subsequent position
+#This effectively removes "ties" - ie situations where two positions have the same quantification
 def recursive_checkback(vector, position_checked):
 
     current_position = position_checked
@@ -375,7 +356,7 @@ def recursive_checkback(vector, position_checked):
 
 #Gets the "Uniqueness" of a given position.
 #This is defined as the MINIMUM of its distance from either the position before it or the position after it
-#Where distance = higher enrichment/smaller enrichment
+#Where distance = higher quantification/smaller quantification
 def get_uniqueness(vector, position):
 
     all_possible_distances = []
@@ -393,14 +374,13 @@ def get_uniqueness(vector, position):
     
     return min(all_possible_distances)
 
-#This function carries out the main thrust of FlyGene Score calculation, generating a single summed value across all categories (ie Tissue, Function, Type) 
-#This sum represents the similarity between BOTH relative inter-tissue gene expression relationships and per-tissue gene enrichment
-# Again, this can be summarised as SUM[across all categories]((1/1+ abs(position difference) + (1/1+abs(enrichment difference))) 
+#This function carries out the main thrust of GESS calculation, generating a single summed value across all categories (ie Tissue, Function, Type) 
+#This sum represents the similarity between BOTH relative inter-tissue gene quantification relationships and per-tissue gene quantification
 def make_comparison(querylist, targetlist, weightoption, loglevel, use_posdist, exptype, file_obj = ''):
 
     #New feature - only the top 25 most "critical" categories for each gene are studied
     #This prevents information flooding from large scRNA-seq datasets, where MOST cell types will inevitably have relatively low expression
-    #In turn, this led to genes which were very cell-type specific to different cell types having high GESS
+    #In turn, this led to genes which were very cell-type specific to different cell types having extremely high GESS
     critical_categories = []
 
     if len(querylist) > 25 :
@@ -584,7 +564,6 @@ def make_comparison(querylist, targetlist, weightoption, loglevel, use_posdist, 
         crosscat_sum += category_sum
         
         #The multiplicative score is equal to position funciton times score function
-        #THIS IS THE DEFAULT GESS METRIC USED
         category_mult = position_function * score_function
         multidiffrow.append(category_mult)
 
@@ -596,6 +575,7 @@ def make_comparison(querylist, targetlist, weightoption, loglevel, use_posdist, 
     if file_obj != '':
         for list in [catrow, qexpression_row, qpositionrow, qpos_uniquenessrow, qlogrow, texpression_row, tpositionrow, tpos_uniquenessrow, tlogrow, positiondiffrow, worked_posrow, scorediffrow, worked_scorerow, adddiffrow, multidiffrow]:
             file_obj.writerow(list)
+
     print(crosscat_sum, crosscat_mult_sum, critical_categories)
 
     return crosscat_sum, crosscat_mult_sum, critical_categories
@@ -606,6 +586,7 @@ def populate_annotations(qspecies, tspecies, annotation_location, badterms, anno
     query_annotations = defaultdict(dict)
     target_annotations = defaultdict(dict)
 
+    affirmatives = ['Y', 'YES', 'TRUE', 'T']
     annoframe = pd.read_csv(annotation_location)
 
     if qspecies not in annoframe.columns:
@@ -623,10 +604,10 @@ def populate_annotations(qspecies, tspecies, annotation_location, badterms, anno
 
         def type_caller(df_row):
 
-            if df_row[qspecies].upper() == 'YES' and df_row[annotation] not in badterms:
+            if df_row[qspecies].upper() in affirmatives and df_row[annotation] not in badterms:
                query_annotations[annotation][df_row['Name']]=df_row[annotation]
             
-            if df_row[tspecies].upper() == 'YES':
+            if df_row[tspecies].upper() in affirmatives:
                target_annotations[annotation][df_row['Name']]=df_row[annotation]
         
         annoframe.apply(type_caller, axis=1)
