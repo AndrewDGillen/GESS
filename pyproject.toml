@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "GESS"
+version = "0.1.0"
+authors = [
+  { name="Andrew Gillen", email="andrew.gillen@glasgow.ac.uk" },
+]
+
+description = "A package designed to allow scoring of gene expression patterns using the Gene Expression Similarity Score system"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "seaborn",
+    "fastcluster",
+    "matplotlib",
+    "scanpy",
+]
+
+[project.urls]
+Homepage = "https://github.com/AndrewDGillen/GESS"
+Issues = "https://github.com/AndrewDGillen/GESS/issues"
