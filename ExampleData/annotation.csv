@@ -1,0 +1,27 @@
+Name,Function,Type,Other name,Human equivalent,Drosophila melanogaster,Aedes aegypti
+Malpighian Tubules,Execretory,Epithelial,Malpigian Tubules,kidney,yes,yes
+Head,Nervous/Sensory,Many,,head,yes,yes
+Eye,Nervous/Sensory,neuroepithelial,,eye,yes,no
+Brain,Nervous/Sensory,neuroepithelial,,brain,yes,no
+Thoracicoabdominal ganglion,Nervous/Sensory,neuroepithelial,Thoracicoabdominal ganglion,spinal cord,yes,no
+Crop,Digestive,Epithelial,,stomach ,yes,yes
+Midgut,Digestive,Epithelial,,intestine,yes,no
+Hindgut,Digestive,Epithelial,,intestine,yes,yes
+Rectal Pad,Digestive,Epithelial,,rectum,yes,no
+Salivary Gland,Digestive,Epithelial,,salivary glands,yes,no
+Fat Body,Detoxification,Adipose,,liver & adipocytes,yes,no
+Heart,Cardiovascular,Mesodermal,,heart,yes,no
+Trachea,Cardiovascular,Epithelial,,blood vessels,yes,no
+Ovary,Reproductive,Female,,ovary,yes,yes
+Mated Spermatheca,Reproductive,Female,,,yes,no
+Testis,Reproductive,Male,,testis,yes,no
+Accessory glands,Reproductive,Male,,,yes,no
+Carcass,Many,Many,,skin/muscle,yes,no
+Garland cells,Execretory,Epithelial,,podocytes,yes,no
+Unmated Spermatheca,Reproductive,Female,,,yes,no
+Gut,Digestive,Epithelial,,intestine,no,yes
+Abdomen,Many,Many,,,no,yes
+Thorax,Many,Many,,,no,yes
+Proventriculus,Digestive,Epithelial,,intestine,no,yes
+Anterior Midgut,Digestive,Epithelial,,intestine,no,yes
+Posterior Midgut,Digestive,Epithelial,,intestine,no,yes
