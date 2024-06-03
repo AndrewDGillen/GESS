@@ -143,7 +143,6 @@ def matricise_all(query_genes, target_genes, target_data, args):
         #exit()
 
     total_valid = len(set(query_genes).union(set(target_genes)))
-    print(f'Genes of Interest Checked. {total_valid} are valid in these datasets\n')
 
     #Creates a clustered heatmp of GESS scores in query vs target lists using the Seaborn CLUSTERMAP function
     get_matrix(query_genes, target_genes, target_data, args)
@@ -157,15 +156,12 @@ def matricise_all(query_genes, target_genes, target_data, args):
 
 #A function to quickly check that the user settings appear to be valid for matrix generation
 def test_validity(args):
-    #Warns the user about how long H5 processing can take
-    if '.h5' in args.querydata or '.h5' in args.targetdata:
-        print("\n--WARNING--\nProcessing large .h5 files can be very time consuming, especially if you have many genes of interest.\nThis can take up to 1 minute PER COMPARISON \nIf this becomes an issue, consider processing these in smaller chunks.")
-    
+
     #Checks that the user has included "Query" data
     if args.input_query == '' or args.querydata == '':
         print('\n~~~~~ERROR~~~~~\n')
         print('You must supply both query genes (as a line seperated .txt file or as a python list) AND query data(as .csv or .h5ad)')
-        #exit()
+        exit()
 
     #This block of code deals specifically with identifying whether one or two data sets are needed.
     #If no seperate target list is provided, the matrix will be formed all-against-all from query genes

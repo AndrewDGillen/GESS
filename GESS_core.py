@@ -31,12 +31,12 @@ class Comparison():
 
         #If the user fails to supply them, the gene name format is used to infer species
         #This is only absolutely necessary if attempting to interpret an annotation file for bulk analysis.
-        if query_species == '' and self.h5mode in [None, 'Bulk']:
+        if query_species == '' and self.h5mode in [None, 'bulk']:
             self.queryspecies= self.get_species(self.querygene)
         else:
             self.queryspecies = query_species
         
-        if target_species == '' and self.h5mode in [None, 'Bulk']:
+        if target_species == '' and self.h5mode in [None, 'bulk']:
             self.targetspecies = self.get_species(self.targetgene)
         else:
             self.targetspecies = target_species

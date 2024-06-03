@@ -55,7 +55,7 @@ GESS, as you'll appreciate, is somewhat complicated to manually calculate. To fa
   scanpy
   
 ### Running GESS 
-The following examples are for running GESS from the command line. For a python walkthrough, check "Tutorial.ipynb" for a Jupyter notebook tutorial (**COMING SOON!**)
+The following examples are for running GESS from the command line. For a python walkthrough, check "GESS_Tutorial.ipynb" for a Jupyter notebook tutorial
 
 With a single-cell dataset of interest "Sample1.h5ad", which contains information of interest across "cell type" and "tissue" levels, GESS can be calculated using Expression data between two genes with the following command:
 
