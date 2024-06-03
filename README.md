@@ -59,7 +59,7 @@ The following examples are for running GESS from the command line. For a python 
 
 With a single-cell dataset of interest "Sample1.h5ad", which contains information of interest across "cell type" and "tissue" levels, GESS can be calculated using Expression data between two genes with the following command:
 
-  python GESSfinder.py -qg <Gene1> -tg <Gene2> -qd <Sample1.h5ad> -anno <"cell type" "tissue"> -mode <"expression">
+  python GESSfinder.py -qg <"Gene1"> -tg "<Gene2>" -qd <"Sample1.h5ad"> -anno <"cell type" "tissue"> -mode <"expression">
 
 A second dataset can be defined using the -td argument.
 
@@ -67,8 +67,8 @@ Single cell data can be analysed using either "expression" (average expression i
 
 Bulk RNA sequencing data can also be analysed based on an Enrichment matrix (Expression of gene in each sample is normalised against a calibrator sample). This also requires manual definition of each annotation level in a seperate annotation.csv (see example in Example Data folder). Bulk RNA seq GESS can then be run with the command:
 
-  python GESSfinder.py -qg <Gene1> -tg <Gene2> -qd <EnrichmentMatrix> -a <Annotation.csv> -qs <Query Selection> -ts <Target Selection> -mode <"bulk"> -anno <"Tissue" "Function">
+  python GESSfinder.py -qg <"Gene1"> -tg <"Gene2"> -qd <"EnrichmentMatrix"> -a <"Annotation.csv"> -qs <"Query Selection"> -ts <"Target Selection"> -mode <"bulk"> -anno <"Tissue" "Function">
 
 This repository also contains code for automatically calculating GESS across multiple genes of interest, and hierarchically clustering results based on their GESS value. This function can be called using GESSmatricise.py, defining datasets as above. Gene lists can be defined in line-separated .txt files (see example in Example Data folder). For example, for single-cell data:
 
-  python GESSmatricise.py -iq <GeneList1.txt> -qd <Sample1.h5ad> -anno <"cell type" "tissue"> -mode <"expression">
+  python GESSmatricise.py -iq <"GeneList1.txt"> -qd <"Sample1.h5ad"> -anno <"cell type" "tissue"> -mode <"expression">
