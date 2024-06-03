@@ -43,7 +43,7 @@ GESS, as you'll appreciate, is somewhat complicated to manually calculate. To fa
 ### Installation
 
 -> **For command line version** - Simply download this repository<br>
--> **For python module** Downloadable from PyPI (https://pypi.org/project/GESS/) using the command pip install GESS<br>
+-> **For python module** Downloadable from PyPI (https://pypi.org/project/GESS/) using the command: <br>pip install GESS<br>
 
 ### Requirements
   Python3 >= 3.10<br>
