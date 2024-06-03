@@ -42,17 +42,17 @@ GESS, as you'll appreciate, is somewhat complicated to manually calculate. To fa
 
 ### Installation
 
--> **For command line version** - Simply download this repository
--> **For python module** Downloadable from PyPI (https://pypi.org/project/GESS/) using the command pip install GESS
+-> **For command line version** - Simply download this repository<br>
+-> **For python module** Downloadable from PyPI (https://pypi.org/project/GESS/) using the command pip install GESS<br>
 
 ### Requirements
-  Python3 >= 3.10
-  numpy
-  pandas
-  seaborn
-  fastcluster
-  matplotlib
-  scanpy
+  Python3 >= 3.10<br>
+  numpy<br>
+  pandas<br>
+  seaborn<br>
+  fastcluster<br>
+  matplotlib<br>
+  scanpy<br>
   
 ### Running GESS 
 The following examples are for running GESS from the command line. For a python walkthrough, check "GESS_Tutorial.ipynb" for a Jupyter notebook tutorial
